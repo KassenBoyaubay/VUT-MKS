@@ -17,52 +17,46 @@
  */
 
 #include <stdint.h>
-#include <stdio.h>
 #include "stm32f0xx.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
-  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
+#warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
 int main(void)
 {
-    /* Loop forever */
+	/* Loop forever */
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
 	GPIOA->MODER |= GPIO_MODER_MODER5_0;
-	uint8_t pole[32];
-	for (uint8_t i = 0; i < 32; i++) {
-		switch (i) {
-		case 0:
-		case 2:
-		case 4:
-		case 7:
-		case 8:
-		case 9:
-		case 11:
-		case 12:
-		case 13:
-		case 15:
-		case 16:
-		case 17:
-		case 20:
-		case 22:
-		case 24:
-			pole[i] = 1;
-			break;
-		default:
-			pole[i] = 0;
-			break;
-		}
-	}
-	GPIOA->BSRR = (1<<5);
-	for (uint8_t i = 0; i < 32; i++) {
-		if (pole[i] == 1) {
-			GPIOA->BSRR = (1<<5);
-		} else
-		if (pole[i] == 0) {
-			GPIOA->BRR = (1<<5);
+//	uint8_t pole[32] = {1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0};
+//	GPIOA->BSRR = (1<<5);
+//	uint8_t j = 0;
+//	while (j < 5) {
+//		for (uint8_t i = 0; i < 32; i++) {
+//			if (pole[i] == 1) {
+//				GPIOA->BSRR = (1<<5);
+//			} else
+//				if (pole[i] == 0) {
+//					GPIOA->BRR = (1<<5);
+//				}
+//			for (volatile uint32_t i = 0; i < 100000; i++) {}
+//		}
+//		for (volatile uint32_t i = 0; i < 100000; i++) {}
+//		j++;
+//	}
+	uint32_t pole = 0b10101001110111011100101010000000;
+	uint8_t j = 0;
+		while (j < 5) {
+		for (uint8_t i = 31; i >= 0; i--) {
+			if (((pole & 1UL << i) >> i) == 1) {
+				GPIOA->BSRR = (1<<5);
+			} else
+				if (((pole & 1UL << i) >> i) == 0) {
+					GPIOA->BRR = (1<<5);
+				}
+			for (volatile uint32_t i = 0; i < 100000; i++) {}
 		}
 		for (volatile uint32_t i = 0; i < 100000; i++) {}
+		j++;
 	}
-	for (volatile uint32_t i = 0; i < 100000; i++) {}
 }
