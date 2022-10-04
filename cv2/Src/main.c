@@ -45,6 +45,40 @@ if (Tick > delay + LED_TIME_BLINK) {
 
 void tlacitka(void)
 {
+	static uint16_t debounce = 0xFFFF;
+	static uint32_t delay;
+	static uint32_t off_time;
+//	static uint32_t old_s1;
+//	uint32_t new_s1 = GPIOC->IDR & (1<<1);
+
+	if (Tick > delay + 5) {
+		debounce <<= 1;
+		if (GPIOC->IDR & (1<<0)) debounce |= 0x0001;
+		if (debounce == 0x8000) {
+			off_time = Tick + LED_TIME_LONG;
+			GPIOB->BSRR = (1<<0);
+			debounce = 0xFFFF;
+		}
+		delay = Tick;
+	}
+
+	if (Tick > off_time) {
+		GPIOB->BRR = (1<<0);
+	}
+
+	/*
+	if (old_s1 && !new_s1) { // falling edge
+		off_time = Tick + LED_TIME_LONG;
+		GPIOB->BSRR = (1<<0);
+	}
+	old_s1 = new_s1;
+
+	if (Tick > off_time) {
+		GPIOB->BRR = (1<<0);
+	}
+	*/
+
+	/*
 	static uint32_t old_s2;
 	static uint32_t old_s1;
 	uint32_t new_s2 = GPIOC->IDR & (1<<0);
@@ -66,6 +100,7 @@ void tlacitka(void)
 	if (Tick > off_time) {
 		GPIOB->BRR = (1<<0);
 	}
+	*/
 }
 
 /*
