@@ -29,18 +29,18 @@
 volatile uint32_t Tick;
 
 void SysTick_Handler(void)
- {
- Tick++;
- }
+{
+	Tick++;
+}
 
 void blikac(void)
 {
-static uint32_t delay;
+	static uint32_t delay;
 
-if (Tick > delay + LED_TIME_BLINK) {
-	GPIOA->ODR ^= (1<<4);
-	delay = Tick;
-}
+	if (Tick > delay + LED_TIME_BLINK) {
+		GPIOA->ODR ^= (1<<4);
+		delay = Tick;
+	}
 }
 
 void tlacitka(void)
@@ -48,35 +48,21 @@ void tlacitka(void)
 	static uint16_t debounce = 0xFFFF;
 	static uint32_t delay;
 	static uint32_t off_time;
-//	static uint32_t old_s1;
-//	uint32_t new_s1 = GPIOC->IDR & (1<<1);
 
 	if (Tick > delay + 5) {
 		debounce <<= 1;
 		if (GPIOC->IDR & (1<<0)) debounce |= 0x0001;
-		if (debounce == 0x8000) {
-			off_time = Tick + LED_TIME_LONG;
-			GPIOB->BSRR = (1<<0);
-			debounce = 0xFFFF;
-		}
 		delay = Tick;
 	}
 
-	if (Tick > off_time) {
-		GPIOB->BRR = (1<<0);
-	}
-
-	/*
-	if (old_s1 && !new_s1) { // falling edge
+	if (debounce == 0x8000) {
 		off_time = Tick + LED_TIME_LONG;
 		GPIOB->BSRR = (1<<0);
 	}
-	old_s1 = new_s1;
 
 	if (Tick > off_time) {
 		GPIOB->BRR = (1<<0);
 	}
-	*/
 
 	/*
 	static uint32_t old_s2;
@@ -100,7 +86,7 @@ void tlacitka(void)
 	if (Tick > off_time) {
 		GPIOB->BRR = (1<<0);
 	}
-	*/
+	 */
 }
 
 /*
@@ -111,7 +97,7 @@ void EXTI0_1_IRQHandler(void)
   GPIOB->ODR ^= (1<<0); // toggle
   }
  }
-*/
+ */
 
 int main(void)
 {
@@ -130,7 +116,7 @@ int main(void)
 	EXTI->IMR |= EXTI_IMR_MR0; // mask
 	EXTI->FTSR |= EXTI_FTSR_TR0; // trigger on falling edge
 	NVIC_EnableIRQ(EXTI0_1_IRQn); // enable EXTI0_1
-	*/
+	 */
 
 	while (1) {
 		blikac();
