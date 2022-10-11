@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdint.h>
 #include "sct.h"
 /* USER CODE END Includes */
 
@@ -94,6 +95,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   sct_init();
+  HAL_TIM_Encoder_Start(&htim1, htim1.Channel);
 //  sct_led(0x7A5C36DE);
 //  HAL_Delay(1000);
 
@@ -107,10 +109,12 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  for (uint16_t value = 0; value <= 999; value += 111) {
-			sct_value(value);
-			HAL_Delay(1000);
-	  }
+//	  for (uint16_t value = 0; value <= 999; value += 111) {
+//			sct_value(value);
+//			HAL_Delay(1000);
+//	  }
+	  sct_value(__HAL_TIM_GET_COUNTER(&htim1));
+	  HAL_Delay(50);
 
   }
   /* USER CODE END 3 */
