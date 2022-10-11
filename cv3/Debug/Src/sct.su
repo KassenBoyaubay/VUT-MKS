@@ -1,0 +1,2 @@
+../Src/sct.c:10:6:sct_init	8	static
+../Src/sct.c:20:6:sct_led	24	static
