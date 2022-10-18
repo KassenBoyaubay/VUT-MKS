@@ -47,6 +47,8 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 static volatile uint32_t raw_pot;
+static volatile uint32_t avg_pot = 0;
+static uint8_t ADC_Q = 12;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,7 +65,10 @@ static void MX_ADC_Init(void);
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
- raw_pot = HAL_ADC_GetValue(hadc);
+ // raw_pot = HAL_ADC_GetValue(hadc);
+ raw_pot = avg_pot >> ADC_Q;
+ avg_pot -= raw_pot;
+ avg_pot += HAL_ADC_GetValue(hadc);
 }
 /* USER CODE END 0 */
 
@@ -111,7 +116,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	sct_value(raw_pot * 500 / 4096, raw_pot * 9 / 4096);
+	// sct_value(raw_pot * 500 / 4096, raw_pot * 9 / 4096);
+	sct_value(avg_pot * 500 / 8388608, avg_pot * 9 / 8388608);
 	HAL_Delay(50);
   }
   /* USER CODE END 3 */
