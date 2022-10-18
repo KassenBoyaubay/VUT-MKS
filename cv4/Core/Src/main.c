@@ -117,7 +117,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	// sct_value(raw_pot * 500 / 4096, raw_pot * 9 / 4096);
-	sct_value(avg_pot * 500 / 8388608, avg_pot * 9 / 8388608);
+	sct_value(2 * (avg_pot * 250 / 16777216), avg_pot * 9 / 16777216);
 	HAL_Delay(50);
   }
   /* USER CODE END 3 */
