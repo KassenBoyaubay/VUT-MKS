@@ -153,9 +153,9 @@ static void uart_process_command(char *cmd) {
 	} else if (strcasecmp(token, "DUMP") == 0) {
 		uint8_t value = 0;
 
-		for (uint8_t i = 0; i <= 15; i++) {
+		for (uint16_t i = 0; i <= 15; i++) {
 			HAL_I2C_Mem_Read(&hi2c1, EEPROM_ADDR, i, I2C_MEMADD_SIZE_16BIT, &value, 1, 1000);
-			if (i == 7) printf("%02X\n", value);
+			if (i == 7 || i == 15) printf("%02X\n", value);
 			else printf("%02X ", value);
 		}
 	}
